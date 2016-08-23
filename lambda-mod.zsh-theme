@@ -3,6 +3,38 @@
 local LAMBDA="%(?,%{$fg_bold[green]%}λ,%{$fg_bold[red]%}λ)"
 if [[ "$USER" == "root" ]]; then USERCOLOR="red"; else USERCOLOR="yellow"; fi
 
+if [ "$LAMBDA_GIT_CLEAN" = "" ]; then
+  LAMBDA_GIT_CLEAN="%F{green}✔%F{black}"
+fi
+
+if [ "$LAMBDA_GIT_DIRTY" = "" ]; then
+  LAMBDA_GIT_DIRTY="%F{yellow}✘%F{black}"
+fi
+
+if [ "$LAMBDA_GIT_ADDED" = "" ]; then
+  LAMBDA_GIT_ADDED="%F{green}✚%F{black}"
+fi
+
+if [ "$LAMBDA_GIT_MODIFIED" = "" ]; then
+  LAMBDA_GIT_MODIFIED="%F{blue}✹%F{black}"
+fi
+
+if [ "$LAMBDA_GIT_DELETED" = "" ]; then
+  LAMBDA_GIT_DELETED="%F{red}✖%F{black}"
+fi
+
+if [ "$LAMBDA_GIT_UNTRACKED" = "" ]; then
+  LAMBDA_GIT_UNTRACKED="%F{yellow}✭%F{black}"
+fi
+
+if [ "$LAMBDA_GIT_RENAMED" = "" ]; then
+  LAMBDA_GIT_RENAMED="➜"
+fi
+
+if [ "$LAMBDA_GIT_UNMERGED" = "" ]; then
+  LAMBDA_GIT_UNMERGED="═"
+fi
+
 # Git sometimes goes into a detached head state. git_prompt_info doesn't
 # return anything in this case. So wrap it in another function and check
 # for an empty string.
@@ -38,21 +70,23 @@ ${LAMBDA}\
 RPROMPT='$(get_right_prompt)'
 
 # Format for git_prompt_info()
-ZSH_THEME_GIT_PROMPT_PREFIX="at %{$fg[blue]%} "
-ZSH_THEME_GIT_PROMPT_SUFFIX="%{$reset_color%}"
-ZSH_THEME_GIT_PROMPT_DIRTY=""
-ZSH_THEME_GIT_PROMPT_CLEAN="%{$fg_bold[green]%} ✔"
+ZSH_THEME_GIT_PROMPT_PREFIX="%F{reset}@ %F{blue} "
+ZSH_THEME_GIT_PROMPT_SUFFIX="%F{reset}"
+ZSH_THEME_GIT_PROMPT_DIRTY=" $LAMBDA_GIT_DIRTY"
+ZSH_THEME_GIT_PROMPT_CLEAN=" $LAMBDA_GIT_CLEAN"
 
 # Format for git_prompt_status()
-ZSH_THEME_GIT_PROMPT_ADDED="%{$fg_bold[green]%}+"
-ZSH_THEME_GIT_PROMPT_MODIFIED="%{$fg_bold[blue]%}!"
-ZSH_THEME_GIT_PROMPT_DELETED="%{$fg_bold[red]%}-"
-ZSH_THEME_GIT_PROMPT_RENAMED="%{$fg_bold[magenta]%}>"
-ZSH_THEME_GIT_PROMPT_UNMERGED="%{$fg_bold[yellow]%}#"
-ZSH_THEME_GIT_PROMPT_UNTRACKED="%{$fg_bold[cyan]%}?"
+ZSH_THEME_GIT_PROMPT_ADDED=" $LAMBDA_GIT_ADDED"
+ZSH_THEME_GIT_PROMPT_MODIFIED=" $LAMBDA_GIT_MODIFIED"
+ZSH_THEME_GIT_PROMPT_DELETED=" $LAMBDA_GIT_DELETED"
+ZSH_THEME_GIT_PROMPT_UNTRACKED=" $LAMBDA_GIT_UNTRACKED"
+ZSH_THEME_GIT_PROMPT_RENAMED=" $LAMBDA_GIT_RENAMED"
+ZSH_THEME_GIT_PROMPT_UNMERGED=" $LAMBDA_GIT_UNMERGED"
 
 # Format for git_prompt_ahead()
-ZSH_THEME_GIT_PROMPT_AHEAD=" %{$fg_bold[white]%}^"
+ZSH_THEME_GIT_PROMPT_AHEAD=" ⬆"
+ZSH_THEME_GIT_PROMPT_BEHIND=" ⬇"
+ZSH_THEME_GIT_PROMPT_DIVERGED=" ⬍"
 
 
 # Format for git_prompt_long_sha() and git_prompt_short_sha()

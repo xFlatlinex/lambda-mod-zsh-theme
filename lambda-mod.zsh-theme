@@ -35,16 +35,35 @@ if [ "$LAMBDA_GIT_UNMERGED" = "" ]; then
   LAMBDA_GIT_UNMERGED="═"
 fi
 
+function get_git_prompt_info() {
+    if [[ "$(pwd)" == *"Volumes"* ]]; then
+        echo "NOPE!"
+    else
+        git_prompt_info
+    fi
+}
+
+function get_git_prompt_status() {
+    if [[ "$(pwd)" == *"Volumes"* ]]; then
+        echo ""
+    else
+        git_prompt_status
+    fi
+}
+
 # Git sometimes goes into a detached head state. git_prompt_info doesn't
 # return anything in this case. So wrap it in another function and check
 # for an empty string.
 function check_git_prompt_info() {
     if git rev-parse --git-dir > /dev/null 2>&1; then
-        if [[ -z $(git_prompt_info) ]]; then
-            echo "%{$fg[blue]%}detached-head%{$reset_color%}) $(git_prompt_status)
+        if [[ $(get_git_prompt_info) == "NOPE!" ]]; then
+            echo "
+%{$fg_bold[cyan]%}→ "
+        elif [[ -z $(get_git_prompt_info) ]]; then
+            echo "%{$fg[blue]%}detached-head%{$reset_color%}) $(get_git_prompt_status)
 %{$fg[yellow]%}→ "
         else
-            echo "$(git_prompt_info) $(git_prompt_status)
+            echo "$(get_git_prompt_info) $(get_git_prompt_status)
 %{$fg_bold[cyan]%}→ "
         fi
     else
